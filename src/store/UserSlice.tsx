@@ -1,5 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {userLogin} from './AsyncAction';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface employee {
   name: String;
@@ -26,6 +27,7 @@ const userSlice = createSlice({
   reducers: {
     addingEmployee: (state, {payload}) => {
       console.log('employee', payload);
+     
       state.employee.push(payload);
     },
   },

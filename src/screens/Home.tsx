@@ -2,6 +2,7 @@ import {View, Text, TextInput, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {addingEmployee} from '../store/UserSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = () => {
   const [fname, setFname] = useState('');
