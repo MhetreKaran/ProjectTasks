@@ -1,4 +1,4 @@
-import {View, Text, TextInput, TouchableOpacity} from 'react-native';
+import {View, Text, TextInput, TouchableOpacity, Alert} from 'react-native';
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {addingEmployee} from '../store/UserSlice';
@@ -12,6 +12,13 @@ const Home = () => {
   const [city, setCity] = useState('');
   const userEmail = useSelector(state => state.userReducer?.userEmail);
   const dispath = useDispatch();
+  const clearFormFeild=()=>{
+    setFname('')
+    setLname('')
+    setAge('')
+    setAddress('')
+    setCity('')
+  }
   const addEmployee = () => {
     const employee = {
       fname,
@@ -22,6 +29,8 @@ const Home = () => {
     };
     console.log(employee);
     dispath(addingEmployee(employee));
+    Alert.alert('Employee added successfully');
+    clearFormFeild();
   };
   return (
     <>
