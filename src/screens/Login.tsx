@@ -2,33 +2,52 @@ import {View, Text, TextInput, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {userLogin} from '../store/AsyncAction';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({navigation}) => {
   const [username, setUsername] = useState('');
+  const [emailVerify, setEmailVerify] = useState(false);
   const [password, setPassword] = useState('');
-  const [error, setError] = useState({
-    emailError: '',
-    passwordError: '',
-  });
-  const token = useSelector(state => state.userReducer?.token);
-  console.log(token);
+  const [passwordVerify, setPasswordVerify] = useState(false);
 
   const dispatch = useDispatch();
-
+  const handleEmail = (e: any) => {
+    let emailVar = e.nativeEvent.text;
+    setUsername(emailVar);
+    setEmailVerify(false);
+    if (/^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/.test(emailVar)) {
+      setUsername(emailVar);
+      setEmailVerify(true);
+    }
+  };
+  const handlePassword = (e: any) => {
+    let passwordVar = e.nativeEvent.text;
+    setPassword(passwordVar);
+    setPasswordVerify(false);
+    if (/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/.test(passwordVar)) {
+      setPassword(passwordVar);
+      setPasswordVerify(true);
+    }
+  };
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const getData = async () => {
+    const data = await AsyncStorage.getItem('isLoggedIn');//eve.holt@reqres.in
+    setIsLoggedIn(data);
+  };
+useEffect(()=>{
+  getData();
+  if(isLoggedIn){
+    navigation.navigate("Tabs")
+  }
+},[isLoggedIn])
   const loginForm = () => {
     try {
-      if (username == '' && password == '') {
-        setError({
-          ...error,
-          emailError: 'username can not empty',
-          passwordError: 'password can not empty',
-        });
-      } else {
-        const user = {
-          username,
-          password,
-          navigation,
-        };
+      const user = {
+        username,
+        password,
+        navigation
+      };
+      if (emailVerify && passwordVerify) {
         dispatch(userLogin(user));
       }
     } catch (error) {}
@@ -38,22 +57,21 @@ const Login = ({navigation}) => {
       <TextInput
         style={{width: 200, borderBottomWidth: 1, borderRadius: 8}}
         placeholder="Username"
-        onChangeText={e => setUsername(e)}
-        value={username}
+        onChange={e => handleEmail(e)}
       />
-      {error.emailError && (
-        <Text style={{color: 'red'}}>{error.emailError}</Text>
+      {username.length < 1 ? null : emailVerify ? null : (
+        <Text style={{color: 'red'}}>Enter proper email address</Text>
       )}
       <TextInput
         style={{width: 200, borderBottomWidth: 1, borderRadius: 8}}
         placeholder="Password"
-        onChangeText={e => setPassword(e)}
-        value={password}
+        onChange={e => handlePassword(e)}
       />
-      {error.passwordError && (
-        <Text style={{color: 'red'}}>{error.passwordError}</Text>
+      {password.length < 1 ? null : passwordVerify ? null : (
+        <Text style={{color: 'red'}}>
+          Uppercase, Lowercase, Number and 6 or more characters
+        </Text>
       )}
-        {token.error && <Text style={{color:'red'}}>{token.error}</Text>}
       <TouchableOpacity
         onPress={loginForm}
         style={{

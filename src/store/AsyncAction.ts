@@ -18,9 +18,10 @@ export const userLogin = createAsyncThunk('userLogin', async data => {
     console.log('result', result);
     if (result.token) {
       AsyncStorage.setItem("Token",JSON.stringify(result.token));
+      AsyncStorage.setItem("username",JSON.stringify(data?.username));
       AsyncStorage.setItem("isLoggedIn",JSON.stringify(true));
       Alert.alert("Logged In Successful");
-      data.navigation.navigate('Home');
+      data.navigation.navigate('Tabs');
     }
     if(result.error){
       Alert.alert(result.error);

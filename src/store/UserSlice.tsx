@@ -18,7 +18,7 @@ const initialState = {
     },
   ],
   token: '',
-  userEmail:''
+  userEmail:'',
 };
 
 const userSlice = createSlice({

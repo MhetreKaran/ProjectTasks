@@ -6,8 +6,8 @@ import Employee from './Employee';
 const Tab = createBottomTabNavigator();
 const TabNavigation = () => {
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={Home} options={{headerShown: false}} />
+    <Tab.Navigator screenOptions={{headerShown:false}}>
+      <Tab.Screen name="Home" component={Home}  />
       <Tab.Screen
         name="Employee"
         component={Employee}
